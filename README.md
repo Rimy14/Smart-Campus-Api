@@ -2,137 +2,122 @@
 
 ## 📌 Overview
 
-The Smart Campus API is a RESTful web service developed using Java, JAX-RS (Jersey), and Grizzly HTTP server.
+The Smart Campus API is a RESTful web service developed using Java, JAX-RS (Jersey), and the Grizzly HTTP server.
 It manages rooms, sensors, and sensor readings within a smart campus environment.
+
+The API follows RESTful principles and provides structured JSON responses with proper HTTP status codes.
 
 ---
 
 ## 🚀 Base URL
 
-```
+```bash
 http://localhost:8080/api/v1/
 ```
 
 ---
 
-#  PART 1 — Service Architecture & Discovery
+# 📊 API Endpoints
 
-## 🔹 Endpoint
+## 🔹 Discovery
 
-```
+```bash
 GET /api/v1/
 ```
 
-### **Q1: Explain JAX-RS Resource Lifecycle**
+## 🔹 Rooms
 
-In JAX-RS, a new instance of a resource class is created for each incoming request (request-scoped lifecycle).
-This ensures thread safety since multiple requests do not share the same object instance. However, shared data structures such as HashMaps must be handled carefully to avoid race conditions.
-
----
-
-### **Q2: What is HATEOAS and why is it useful?**
-
-HATEOAS (Hypermedia as the Engine of Application State) allows API responses to include links to related resources.
-This enables clients to dynamically navigate the API without relying on hardcoded URLs, improving flexibility and usability.
-
----
-
-#  PART 2 — Room Management
-
-## 🔹 Endpoints
-
-```
+```bash
 POST /rooms
 GET /rooms
 GET /rooms/{id}
 DELETE /rooms/{id}
 ```
 
-### **Q3: Returning IDs vs Full Objects**
+## 🔹 Sensors
 
-Returning only IDs reduces response size and improves performance, but requires additional API calls to fetch details.
-Returning full objects provides complete information in a single response but increases payload size.
-
----
-
-### **Q4: Why is DELETE idempotent?**
-
-DELETE is idempotent because performing the same delete operation multiple times results in the same final state.
-Once a resource is deleted, further DELETE requests will not change the system.
-
----
-
-#  PART 3 — Sensor Operations
-
-## 🔹 Endpoints
-
-```
+```bash
 POST /sensors
 GET /sensors
 GET /sensors?type=Temperature
 ```
 
-### **Q5: Purpose of @Consumes(MediaType.APPLICATION_JSON)**
+## 🔹 Sensor Readings
 
-The @Consumes annotation specifies that the API expects JSON input.
-If a client sends data in another format, the request is rejected with a 415 Unsupported Media Type error.
-
----
-
-### **Q6: QueryParam vs PathParam**
-
-Query parameters are used for filtering (e.g., `/sensors?type=CO2`) and are more flexible.
-Path parameters are used to identify specific resources (e.g., `/sensors/1`).
-
----
-
-#  PART 4 — Sensor Readings (Sub-Resources)
-
-## 🔹 Endpoints
-
-```
+```bash
 POST /sensors/{id}/readings
 GET /sensors/{id}/readings
 ```
 
-### **Q7: Sub-Resource Locator Pattern**
+---
 
-This pattern delegates handling of sub-resources to separate classes.
-It improves modularity, readability, and maintainability of the code.
+# ⚙️ How to Build and Run
+
+## 🔧 Step-by-step instructions
+
+1. Clone the repository:
+
+```bash
+git clone https://github.com/Rimy14/Smart-Campus-Api.git
+```
+
+2. Open the project in **NetBeans**
+
+3. Ensure Maven dependencies are downloaded automatically
+
+4. Run the project using NetBeans (Run ▶️)
+
+5. The server will start at:
+
+```bash
+http://localhost:8080/api/v1/
+```
 
 ---
 
-### **Q8: Data Consistency**
+# 🧪 Sample curl Commands
 
-When a new sensor reading is added, the sensor’s `currentValue` is updated.
-This ensures that the latest reading is always reflected in the sensor data.
+## 1. Get API info
+
+```bash
+curl http://localhost:8080/api/v1/
+```
+
+## 2. Create a room
+
+```bash
+curl -X POST http://localhost:8080/api/v1/rooms \
+-H "Content-Type: application/json" \
+-d "{\"name\":\"Lab A\",\"capacity\":30}"
+```
+
+## 3. Get all rooms
+
+```bash
+curl http://localhost:8080/api/v1/rooms
+```
+
+## 4. Create a sensor
+
+```bash
+curl -X POST http://localhost:8080/api/v1/sensors \
+-H "Content-Type: application/json" \
+-d "{\"type\":\"Temperature\",\"status\":\"ACTIVE\",\"currentValue\":0,\"roomId\":1}"
+```
+
+## 5. Add sensor reading
+
+```bash
+curl -X POST http://localhost:8080/api/v1/sensors/1/readings \
+-H "Content-Type: application/json" \
+-d "{\"value\":25.5}"
+```
 
 ---
 
-#  PART 5 — Error Handling
+# ⚠️ Error Handling
 
-### **Q9: Why use 422 instead of 404?**
-
-HTTP 422 is used when the request is valid but contains incorrect data (e.g., invalid roomId).
-HTTP 404 is used when a resource does not exist. Therefore, 422 is more appropriate for validation errors.
-
----
-
-### **Q10: Why should stack traces not be exposed?**
-
-Stack traces reveal internal system details such as file paths and class names.
-This information can be exploited by attackers, so a global exception handler is used to return a generic error message.
-
----
-
-### **Q11: Why use filters for logging?**
-
-Filters allow centralized logging of all requests and responses.
-This avoids duplication and ensures consistent logging across the application.
-
----
-
-## 🔹 Error Examples
+The API returns structured JSON responses for errors:
 
 ### 409 Conflict
 
@@ -172,20 +157,4 @@ This avoids duplication and ensures consistent logging across the application.
 
 ---
 
-# ⚙️ How to Run
 
-1. Open project in NetBeans
-2. Run the project
-3. Access:
-
-```
-http://localhost:8080/api/v1/
-```
-
----
-
-# 👨‍💻 Author
-
-Rimaz Nowfel
-BSc (Hons) Computer Science
-IIT Sri Lanka
