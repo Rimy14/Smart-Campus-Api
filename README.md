@@ -1,5 +1,9 @@
 # Smart Campus API
 
+Student Name: M.N.M.Rimaz
+
+Student ID: W2120310 / 20231917
+
 ## Overview
 
 The Smart Campus API is a RESTful web service developed using Java, JAX-RS (Jersey), and Grizzly HTTP server.
