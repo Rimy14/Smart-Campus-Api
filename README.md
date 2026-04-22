@@ -118,7 +118,7 @@ Why is the provision of “Hypermedia” (links and navigation within responses)
 
 ### Answer:
 
-HATEOAS allows API responses to include links to related resources, enabling clients to navigate dynamically. This reduces dependency on hardcoded URLs and static documentation. Clients can discover available actions at runtime. If the API changes, updated links guide the client correctly. This improves flexibility and maintainability.
+Using HATEOAS, the returned API response is allowed to have links to other related resources, thus allowing for dynamic navigation by the client application. It eliminates the need for static URLs as well as static documentation for each request to be made by the client. This improves flexibility and maintainability.
 
 ---
 
@@ -130,7 +130,7 @@ When returning a list of rooms, what are the implications of returning only IDs 
 
 ### Answer:
 
-Returning only IDs reduces response size and saves bandwidth. However, the client must make additional requests to get full details. Returning full objects provides complete information in one response. This simplifies client logic but increases payload size. The choice depends on performance and usability needs.
+Sending back only IDs decreases the size of the response and minimizes network traffic. Nevertheless, the client is required to issue further requests for obtaining additional details. Sending back the whole object ensures that all necessary details are included in the response, thereby simplifying client-side processing but increasing the payload size.
 
 ---
 
@@ -140,7 +140,7 @@ Is the DELETE operation idempotent in your implementation? Provide a detailed ju
 
 ### Answer:
 
-Yes, DELETE is idempotent because repeating the same request results in the same final state. Once a room is deleted, it is removed from the system. Sending the request again does not change anything further. The API may return a “not found” response. This ensures safe retries without side effects.
+Yes, DELETE is idempotent, and making the request multiple times always ends up with the same end result. If a room has already been deleted, there will be no room in the system to delete. Making another request will have no additional effect on the system state.
 
 ---
 
@@ -177,7 +177,7 @@ troller class?
 
 ### Answer:
 
-The Sub-Resource Locator pattern helps divide a large API into smaller, manageable components. Instead of handling all logic in one large controller, each sub-resource is managed by a separate class. This improves code readability and makes the structure easier to understand. It also reduces duplication and keeps responsibilities clearly separated. In large systems, this approach improves maintainability and allows developers to extend features without affecting other parts of the API.
+Sub Resource Locator pattern will come handy while breaking down a big API into small pieces for manageability. The logic that would have been handled by the large single controller would now be handled by individual classes corresponding to each sub resource. It will help reduce code complexity and make it readable. Large systems could benefit from this pattern as it will increase maintainability and allow extension without interfering with the rest of the API.
 
 ---
 
@@ -189,7 +189,7 @@ Why is HTTP 422 often considered more semantically accurate than a standard 404 
 
 ### Answer:
 
-HTTP 422 is used when the request is syntactically correct but contains invalid or incorrect data. In this case, the JSON format is valid, but it refers to a resource that does not exist, such as an invalid roomId. A 404 error is used when the requested endpoint itself cannot be found. Therefore, 422 provides a more precise description of the problem. It helps clients understand that the issue is with the data, not the endpoint. This improves error clarity and API usability.
+The HTTP 422 response is issued where the request sent by the client was syntactically correct, but contained either invalid or incorrect data. In this case, while the JSON format was correct, it referred to a non-existent resource, such as an invalid roomId. The error code 404 is issued where the requested endpoint simply does not exist. As a result, 422 offers a more accurate diagnosis of what went wrong. It helps clients understand that the issue is with the data, not the endpoint. This improves error clarity and API usability.
 
 ---
 
